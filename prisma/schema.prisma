@@ -1,0 +1,72 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Category {
+  id        String     @id @default(cuid())
+  name      String
+  order     Int        @default(0)
+  items     MenuItem[]
+}
+
+model MenuItem {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  price       Int
+  imageUrl    String?
+  isAvailable Boolean  @default(true)
+  isVegan     Boolean  @default(false)
+  isOatMilk   Boolean  @default(false)
+  isSpecialty Boolean  @default(false)
+  isCold      Boolean  @default(false)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String
+  guests    Int
+  date      DateTime
+  note      String?
+  status    String   @default("pending") // pending | confirmed | cancelled
+  createdAt DateTime @default(now())
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userName  String
+  userEmail String
+  userImage String?
+  rating    Int      // 1 to 5
+  comment   String
+  createdAt DateTime @default(now())
+}
+
+model NewsletterSignup {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model SiteSettings {
+  id           String  @id @default("default")
+  bannerText   String?
+  bannerActive Boolean @default(false)
+  openingHours String  @default("Ежедневно 07:30 – 22:00")
+  wifiName     String  @default("CoffeeBelt_Guest")
+  wifiPassword String  @default("coffeebelt2026")
+  ratingValue  String  @default("4.9")
+  ratingCount  String  @default("98")
+}

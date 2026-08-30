@@ -1,0 +1,28 @@
+# Dependencies
+/node_modules
+/.pnpm-store
+
+# Next.js Build Output
+/.next/
+/out/
+
+# Production / Local Environment files
+.env
+.env*.local
+.env.production
+.env.development
+
+# SQLite Database
+/prisma/dev.db
+/prisma/dev.db-journal
+*.db
+*.db-journal
+
+# Uploads directory
+/public/uploads/
+
+# IDE & OS files
+.DS_Store
+*.pem
+.vscode/
+.idea/

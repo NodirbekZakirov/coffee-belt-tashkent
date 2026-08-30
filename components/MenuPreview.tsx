@@ -20,16 +20,18 @@ interface MenuItem {
   category: { name: string };
 }
 
+import { INITIAL_MENU_ITEMS } from '@/lib/initialData';
+
 export function MenuPreview() {
   const { t } = useTranslation();
-  const [items, setItems] = useState<MenuItem[]>([]);
+  const [items, setItems] = useState<MenuItem[]>(INITIAL_MENU_ITEMS.slice(0, 6));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch('/api/menu')
       .then((res) => res.json())
       .then((data) => {
-        if (Array.isArray(data)) {
+        if (Array.isArray(data) && data.length > 0) {
           setItems(data.slice(0, 6));
         }
       })

@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 
+import { INITIAL_MENU_ITEMS } from '@/lib/initialData';
+
 export async function GET() {
   try {
     const items = await prisma.menuItem.findMany({
@@ -12,10 +14,14 @@ export async function GET() {
         createdAt: 'desc',
       },
     });
-    return NextResponse.json(items);
+
+    if (items && items.length > 0) {
+      return NextResponse.json(items);
+    }
+    return NextResponse.json(INITIAL_MENU_ITEMS);
   } catch (error) {
-    console.error('Failed to fetch menu items:', error);
-    return NextResponse.json({ error: 'Failed to fetch menu items' }, { status: 500 });
+    console.error('Failed to fetch menu items from DB, serving initial menu data:', error);
+    return NextResponse.json(INITIAL_MENU_ITEMS);
   }
 }
 

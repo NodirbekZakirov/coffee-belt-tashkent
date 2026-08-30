@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 
+import { INITIAL_CATEGORIES } from '@/lib/initialData';
+
 export async function GET() {
   try {
     const categories = await prisma.category.findMany({
@@ -12,10 +14,14 @@ export async function GET() {
         },
       },
     });
-    return NextResponse.json(categories);
+
+    if (categories && categories.length > 0) {
+      return NextResponse.json(categories);
+    }
+    return NextResponse.json(INITIAL_CATEGORIES);
   } catch (error) {
-    console.error('Failed to fetch categories:', error);
-    return NextResponse.json({ error: 'Failed to fetch categories' }, { status: 500 });
+    console.error('Failed to fetch categories from DB, serving initial categories data:', error);
+    return NextResponse.json(INITIAL_CATEGORIES);
   }
 }
 

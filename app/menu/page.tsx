@@ -28,10 +28,12 @@ interface MenuItem {
   category: Category;
 }
 
+import { INITIAL_MENU_ITEMS, INITIAL_CATEGORIES } from '@/lib/initialData';
+
 export default function FullMenuPage() {
   const { t } = useTranslation();
-  const [items, setItems] = useState<MenuItem[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
+  const [items, setItems] = useState<MenuItem[]>(INITIAL_MENU_ITEMS);
+  const [categories, setCategories] = useState<Category[]>(INITIAL_CATEGORIES);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [dietaryFilter, setDietaryFilter] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -43,8 +45,8 @@ export default function FullMenuPage() {
       fetch('/api/categories').then((r) => r.json()),
     ])
       .then(([menuData, catData]) => {
-        if (Array.isArray(menuData)) setItems(menuData);
-        if (Array.isArray(catData)) setCategories(catData);
+        if (Array.isArray(menuData) && menuData.length > 0) setItems(menuData);
+        if (Array.isArray(catData) && catData.length > 0) setCategories(catData);
       })
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
